@@ -40,19 +40,19 @@ void displayGrid(char **tab) {
 }
 
 int caseTaken(char ** grid, int pos) {
-    if (pos < 3) {
-        return grid[0][pos] == 'O' || grid[0][pos] == 'X';
-    }
-    if (pos < 6) {
-        return grid[1][pos - 3] == 'O' || grid[1][pos - 3] == 'X';
-    }
     if (pos < 9) {
-        return grid[2][pos - 6] == 'O' || grid[2][pos - 6] == 'X';
+        int line = pos / 3;
+        int col = pos % 3;
+        return grid[line][col] != '\0';
     }
     return 1;
 }
 
 void attributeValue(char ** grid, int pos, char sign) {
+    int line = pos / 3;
+    int col = pos % 3;
+    grid[line][col] = sign;
+    return;
     if (pos < 3) {
         grid[0][pos] = sign;
     } else if (pos < 6) {
@@ -66,26 +66,25 @@ void playerTurn(char ** grid) {
     int selected = -1;
     printf("Ou voulez vous jouer ? \n");
     if (scanf("%d", &selected) != 1) {
+        printf("Invalide. \n");
         exit(0);
     }
-    printf("%d\n", caseTaken(grid, selected));
+    if (selected < 0 || selected > 9) {
+        printf("Invalide. \n");
+        exit(0);
+    }
+    if (caseTaken(grid, selected)) {
+        printf("Case prise. \n");
+        exit(0);
+    }
     attributeValue(grid, selected, 'X');
 }
 
 void opponentTurn(char ** grid) {
-    char selected = '0';
     int pos = 0;
 
-    while (selected == 'O' || selected == 'X') {
+    while (caseTaken(grid, pos)) {
         pos++;
-        if (pos < 3) {
-            selected = grid[0][pos];
-        } else if (pos < 6) {
-            selected = grid[1][pos - 3];
-        } else if (pos < 9) {
-            selected = grid[2][pos - 6];
-        } else {
-        }
     }
 
     attributeValue(grid, pos, 'O');
