@@ -1,28 +1,45 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
 #include "tic-tac-toe.h"
 
 int main() {
-    system("clear");
     char **grid = initGrid();
-    int playing = 1;
+    int end = 0;
 
-    while (playing == 1) {
+    clearTerminal();
+    displayGrid(grid);
+    while (end == 0) {
         playerTurn(grid);
+
+        clearTerminal();
+
         displayGrid(grid);
+        sleep(2);
+        end = isWinner(grid, 'X');
+
+        if (end == 1) {
+            printf("You won !\n");
+            break;
+        }
+
+        clearTerminal();
+
         opponentTurn(grid);
         displayGrid(grid);
+        end = isWinner(grid, 'O');
+
+        if (end == 1) {
+            printf("PC won !\n");
+            break;
+        }
+
+        end = isNull(grid);
+        if (end == 1) {
+            printf("Null !\n");
+        }
     }
 
-
-
-    int i = 0;
-
-    while (grid[i] != NULL) {
-        free(grid[i]);
-        i = i + 1;
-    }
-
-    free(grid);
+    freeAndExit(grid);
     return 0;
 }

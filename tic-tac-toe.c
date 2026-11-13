@@ -12,6 +12,23 @@ char ** initGrid() {
     return grid;
 }
 
+void freeAndExit(char ** grid) {
+    int i = 0;
+
+    while (grid[i] != NULL) {
+        free(grid[i]);
+        i = i + 1;
+    }
+
+    free(grid);
+    exit(0);
+}
+
+void clearTerminal() {
+    int cleared = system("clear");
+    if (cleared == 1) printf("Erreur impossible de clear.");
+}
+
 void displayGrid(char **tab) {
     //system("clear");
     int c1 = 0;
@@ -52,14 +69,6 @@ void attributeValue(char ** grid, int pos, char sign) {
     int line = pos / 3;
     int col = pos % 3;
     grid[line][col] = sign;
-    return;
-    if (pos < 3) {
-        grid[0][pos] = sign;
-    } else if (pos < 6) {
-        grid[1][pos - 3] = sign;
-    } else if (pos < 9) {
-        grid[2][pos - 6] = sign;
-    }
 }
 
 void playerTurn(char ** grid) {
@@ -67,15 +76,15 @@ void playerTurn(char ** grid) {
     printf("Ou voulez vous jouer ? \n");
     if (scanf("%d", &selected) != 1) {
         printf("Invalide. \n");
-        exit(0);
+        freeAndExit(grid);
     }
-    if (selected < 0 || selected > 9) {
+    if (selected < 0 || selected > 8) {
         printf("Invalide. \n");
-        exit(0);
+        freeAndExit(grid);
     }
     if (caseTaken(grid, selected)) {
         printf("Case prise. \n");
-        exit(0);
+        freeAndExit(grid);
     }
     attributeValue(grid, selected, 'X');
 }
@@ -83,9 +92,53 @@ void playerTurn(char ** grid) {
 void opponentTurn(char ** grid) {
     int pos = 0;
 
-    while (caseTaken(grid, pos)) {
+    while (caseTaken(grid, pos) && pos < 10) {
         pos++;
     }
 
+    if (pos == 10) return;
+
     attributeValue(grid, pos, 'O');
+}
+
+int isWinner(char ** grid, char sign) {
+    if (grid[0][0] == sign && grid[0][1] == sign && grid[0][2] == sign) {
+        return 1;
+    }
+    if (grid[1][0] == sign && grid[1][1] == sign && grid[1][2] == sign) {
+        return 1;
+    }
+    if (grid[2][0] == sign && grid[2][1] == sign && grid[2][2] == sign) {
+        return 1;
+    }
+
+    if (grid[0][0] == sign && grid[1][0] == sign && grid[2][0] == sign) {
+        return 1;
+    }
+    if (grid[0][1] == sign && grid[1][1] == sign && grid[2][1] == sign) {
+        return 1;
+    }
+    if (grid[0][2] == sign && grid[1][2] == sign && grid[2][2] == sign) {
+        return 1;
+    }
+
+    if (grid[0][0] == sign && grid[1][1] == sign && grid[2][2] == sign) {
+        return 1;
+    }
+    if (grid[0][2] == sign && grid[1][1] == sign && grid[2][0] == sign) {
+        return 1;
+    }
+
+    return 0;
+}
+
+int isNull(char ** grid) {
+    int pos = 0;
+
+    while (caseTaken(grid, pos) && pos < 10) {
+        pos++;
+    }
+
+    if (pos == 10) return 1;
+    return 0;
 }
