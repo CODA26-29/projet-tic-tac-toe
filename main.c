@@ -19,7 +19,7 @@ int main() {
 
         end = isWinner(grid, 'X');
         if (end == 1) {
-            printf("You won !\n");
+            printf("Gagné !\n");
             break;
         }
         end = isNull(grid);
@@ -35,7 +35,7 @@ int main() {
         end = isWinner(grid, 'O');
 
         if (end == 1) {
-            printf("PC won !\n");
+            printf("PERDU...\n");
             break;
         }
 
