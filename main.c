@@ -16,10 +16,15 @@ int main() {
 
         displayGrid(grid);
         sleep(2);
-        end = isWinner(grid, 'X');
 
+        end = isWinner(grid, 'X');
         if (end == 1) {
             printf("You won !\n");
+            break;
+        }
+        end = isNull(grid);
+        if (end == 1) {
+            printf("Null !\n");
             break;
         }
 

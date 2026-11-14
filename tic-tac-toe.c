@@ -30,7 +30,6 @@ void clearTerminal() {
 }
 
 void displayGrid(char **tab) {
-    //system("clear");
     int c1 = 0;
     while (tab[c1] != NULL) {
         int c2 = 0;
@@ -43,7 +42,7 @@ void displayGrid(char **tab) {
             if (c2 > 0) {
                 printf(" | ");
             }
-            if (tab[c1][c2] != '\0') {
+            if (tab[c1][c2] == 'X' || tab[c1][c2] == 'O') {
                 printf("%c", tab[c1][c2]);
             } else {
                 printf(" ");
@@ -60,7 +59,7 @@ int caseTaken(char ** grid, int pos) {
     if (pos < 9) {
         int line = pos / 3;
         int col = pos % 3;
-        return grid[line][col] != '\0';
+        return grid[line][col] == 'X' || grid[line][col] == 'O';
     }
     return 1;
 }
@@ -73,7 +72,7 @@ void attributeValue(char ** grid, int pos, char sign) {
 
 void playerTurn(char ** grid) {
     int selected = -1;
-    printf("Ou voulez vous jouer ? \n");
+    printf("Ou voulez vous jouer (0 - 8) ? \n");
     if (scanf("%d", &selected) != 1) {
         printf("Invalide. \n");
         freeAndExit(grid);
@@ -92,11 +91,11 @@ void playerTurn(char ** grid) {
 void opponentTurn(char ** grid) {
     int pos = 0;
 
-    while (caseTaken(grid, pos) && pos < 10) {
+    while (caseTaken(grid, pos) && pos < 9) {
         pos++;
     }
 
-    if (pos == 10) return;
+    if (pos == 9) return;
 
     attributeValue(grid, pos, 'O');
 }
@@ -135,10 +134,10 @@ int isWinner(char ** grid, char sign) {
 int isNull(char ** grid) {
     int pos = 0;
 
-    while (caseTaken(grid, pos) && pos < 10) {
+    while (caseTaken(grid, pos) && pos < 9) {
         pos++;
     }
 
-    if (pos == 10) return 1;
+    if (pos == 9) return 1;
     return 0;
 }
